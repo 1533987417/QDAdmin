@@ -50,7 +50,8 @@ const http = {
             let options = Object.assign({},{
                 method,
                 url:url,
-                data
+                data,
+                headers:{"Token":"0123456789"}
             },opts)
             return axios(options)
         }
