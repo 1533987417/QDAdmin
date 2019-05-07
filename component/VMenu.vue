@@ -16,9 +16,29 @@
       <i class="el-icon-menu"></i>
       <span slot="title">贷款信息</span>
     </el-menu-item>
-    <el-menu-item index="loadDetail">
+    <el-menu-item index="Channel">
       <i class="el-icon-menu"></i>
-      <span slot="title">贷款详情</span>
+      <span slot="title">渠道管理</span>
+    </el-menu-item>
+    <el-menu-item index="Question">
+      <i class="el-icon-menu"></i>
+      <span slot="title">常见问题管理</span>
+    </el-menu-item>
+    <el-menu-item index="activeInfo">
+      <i class="el-icon-menu"></i>
+      <span slot="title">头条活动管理</span>
+    </el-menu-item>
+    <el-menu-item index="feedback">
+      <i class="el-icon-menu"></i>
+      <span slot="title">意见反馈</span>
+    </el-menu-item>
+    <el-menu-item index="admin">
+      <i class="el-icon-menu"></i>
+      <span slot="title">管理员权限</span>
+    </el-menu-item>
+    <el-menu-item index="member">
+      <i class="el-icon-menu"></i>
+      <span slot="title">会员查询</span>
     </el-menu-item>
   </el-menu>
 </div>

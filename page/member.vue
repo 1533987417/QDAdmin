@@ -1,59 +1,107 @@
 <template>
 	<div>
 		<v-tab></v-tab>
-		<v-search searchName="查询管理角色">
+		<v-search searchName="查询会员">
 			<template>
 				<el-form label-width="100px" label-position="right" :inline="true" :model="serachForm">
-					<el-form-item label="用户名：">
-						<el-input v-model="serachForm.userName" placeholder="请输入登陆名" 
+					<el-form-item label="手机号：">
+						<el-input v-model="serachForm.Mobile" placeholder="请输入手机号" 
 						class="input-small"></el-input>
 					</el-form-item>
-					<el-form-item label="状态：">
-            <el-select v-model="serachForm.status" placeholder="请选择" class="input-small">
+          <el-form-item label="真实姓名：">
+            <el-input v-model="serachForm.RealName" placeholder="请输入真实姓名" 
+            class="input-small"></el-input>
+          </el-form-item>
+          <el-form-item label="地区：">
+            <el-input v-model="serachForm.Location" placeholder="请输入地区" 
+            class="input-small"></el-input>
+          </el-form-item>
+          <el-form-item label="个人认证：">
+            <el-select v-model="serachForm.IsPersonAuthentication" placeholder="请选择" class="input-small">
               <el-option
-              v-for="item in options"
+              v-for="item in Authentications"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-      </el-form>
-    </template>
-  </v-search>
+        <el-form-item label="企业认证：">
+          <el-select v-model="serachForm.IsCompanyAuthentication" placeholder="请选择" class="input-small">
+            <el-option
+            v-for="item in Authentications"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态：">
+        <el-select v-model="serachForm.status" placeholder="请选择" class="input-small">
+          <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="">
+      <el-button type="primary" @click="onSubmit">查询</el-button>
+    </el-form-item>
+  </el-form>
+</template>
+</v-search>
 
-  <!-- table组件 -->
-  <v-table title="角色列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
-   <template slot="btn">
-    <el-button type="primary" size="small" @click="addDialog">新增</el-button>
-  </template>
-  <el-table :data="tableData" border  style="width: 100%">
-    <el-table-column align="center" type="index" label="序号" width="60"> </el-table-column>
-    <el-table-column align="center" prop="LoginName" label="登陆名" width="120"></el-table-column>
-    <el-table-column align="center" prop="LoginPwd" label="登陆密码" width="120"></el-table-column>
-    <el-table-column align="center" prop="RoleName" label="角色类型" width="100">
-    </el-table-column>
-    <el-table-column align="center" prop="Telephone" label="手机号" min-width="200">
-    </el-table-column>
-    <el-table-column align="center" prop="Email" label="邮箱" width="200"></el-table-column>
-
-    <el-table-column align="center" prop="Status" label="状态" width="50">
-     <template slot-scope="props">{{props.row.Status==0?"启用":"无效"}}</template>
-   </el-table-column>
-   <el-table-column align="center" prop="CreateTime" label="创建时间" width="180">
-     <template slot-scope="props">
-      {{new Date(props.row.CreateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
+<!-- table组件 -->
+<v-table title="角色列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
+ <template slot="btn">
+  <el-button type="primary" size="small" @click="addDialog">新增</el-button>
+</template>
+<el-table :data="tableData" border  style="width: 100%">
+  <el-table-column align="center" type="index" label="序号" width="60"> </el-table-column>
+  <el-table-column align="center" prop="LogoUrl" label="头像" width="120">
+    <template slot-scope="props">
+      <div class="contain-imgs">
+        <img :src="props.row.LogoUrl" alt="">
+      </div>
     </template>
   </el-table-column>
+  <el-table-column align="center" prop="Mobile" label="手机号" width="120"></el-table-column>
+  <el-table-column align="center" prop="Password" label="登录密码" width="120"></el-table-column>
+  <el-table-column align="center" prop="Balance" label="账户余额/分" width="100">
+  </el-table-column>
+  <el-table-column align="center" prop="InvitationCode" label="专属邀请码" min-width="150">
+  </el-table-column>
+  <el-table-column align="center" prop="InviterMobile" label="邀请人手机号" width="150"></el-table-column>
+  <el-table-column align="center" prop="IsVip" label="VIP" width="50">
+   <template slot-scope="props">{{props.row.IsVip==1?"是":"不是"}}</template>
+ </el-table-column>
 
-  <el-table-column align="center" label="操作">
+ <el-table-column align="center" prop="IsPersonAuthentication" label="个人认证" width="100">
+   <template slot-scope="props">{{props.row.IsPersonAuthentication==1?"已认证":"未认证"}}</template>
+ </el-table-column>
+ <el-table-column align="center" prop="IsCompanyAuthentication" label="公司认证" width="100">
+   <template slot-scope="props">{{props.row.IsCompanyAuthentication==1?"已认证":"未认证"}}</template>
+ </el-table-column>
+ <el-table-column align="center" prop="Status" label="状态" width="50">
+   <template slot-scope="props">{{props.row.Status==1?"有效":"无效"}}</template>
+ </el-table-column>
+ <el-table-column align="center" prop="CreateTime" label="创建时间" width="180">
    <template slot-scope="props">
-    <el-button type="text" size="small" @click="upDateDialog(props.row)">修改</el-button>
-    <el-button type="text" size="small" @click="removeItem(props.row)">{{props.row.Status==0?"移除":"有效"}}</el-button>
+    {{new Date(props.row.CreateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
   </template>
+</el-table-column>
+<el-table-column align="center" prop="CreateTime" label="更新时间" width="180">
+  <template slot-scope="props">
+    {{new Date(props.row.UpdateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
+  </template>
+</el-table-column>
+<el-table-column align="center" label="操作">
+ <template slot-scope="props">
+  <el-button type="text" size="small" @click="upDateDialog(props.row)">修改</el-button>
+  <el-button type="text" size="small" @click="removeItem(props.row)">{{props.row.Status==0?"移除":"有效"}}</el-button>
+</template>
 </el-table-column>
 </el-table>
 </v-table>
@@ -143,6 +191,7 @@ export default {
           value: '一般用户',
           label: '一般用户'
         }],
+        Authentications:[{value:0,label:"未认证"},{value:1,label:"已认证"}],
         tableData:[],
         totalCount:0,
             isAdd:true,                    // 是否新增
@@ -263,7 +312,7 @@ export default {
       	let page = this.$refs["table"].getPagingInfo();
       	let para=Object.assign(this.serachForm,page);
       	console.log(para);
-      	http.httpPost("/manager/admin/getAdminList",para).then(data=>{
+      	http.httpPost("/manager/users/getUsersList",para).then(data=>{
       		let result = data.Data,
       		totalCount = data.TotalCount   
       		this.tableData = result

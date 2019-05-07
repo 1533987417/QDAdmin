@@ -15,9 +15,35 @@ let routes = [{
     component:require("./page/LoanInfo.vue").default,
     children:[]
 },{
-    path:"/loadDetail",
-    name:"贷款详情",
-    component:require("./page/loadDetail.vue").default,
+    path:"/Channel",
+    name:"渠道管理",
+    component:require("./page/Channel.vue").default,
+    children:[]
+},{
+    path:"/Question",
+    name:"常见问题管理",
+    component:require("./page/Question.vue").default,
+    children:[]
+},{
+    path:"/activeInfo",
+    name:"头条活动管理",
+    component:require("./page/activeInfo.vue").default,
+    children:[]
+},{
+    path:"/feedback",
+    name:"意见反馈",
+    component:require("./page/feedback.vue").default,
+    children:[]
+}
+,{
+    path:"/admin",
+    name:"管理员权限",
+    component:require("./page/amdin.vue").default,
+    children:[]
+},{
+    path:"/member",
+    name:"会员查询",
+    component:require("./page/member.vue").default,
     children:[]
 }
 ]

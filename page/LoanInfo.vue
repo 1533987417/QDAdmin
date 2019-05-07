@@ -145,11 +145,11 @@
 
   <el-table-column align="center" prop="CityName" label="现居地" width="90"></el-table-column>
   <el-table-column align="center" prop="BornCity" label="户籍" width="90"></el-table-column>
-  <el-table-column align="center" prop="Education" label="教育(文化)程度" width="120">
+ <!--  <el-table-column align="center" prop="Education" label="教育(文化)程度" width="120">
    <template slot-scope="props">
      {{getEducation(props.row.Education)}}
    </template>
- </el-table-column>
+ </el-table-column> -->
  <el-table-column align="center" prop="LoanAmount" label="贷款金额/万" width="110">
  </el-table-column>
  <el-table-column align="center" prop="LoanPeriod" label="贷款期限/月" width="100">
@@ -738,9 +738,10 @@ let generateEditor = ()=>{
      },
      detail(e){
       console.log(e)
-      this.isDialogVisible = true
+      
       http.httpGet("/manager/loan/getLoanInfoDetail/"+e,{}).then(data=>{
-        console.log(data)
+        
+        this.isDialogVisible = true
         this.form=Object.assign({},data) 
       })
     },

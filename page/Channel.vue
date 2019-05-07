@@ -1,15 +1,16 @@
 <template>
 	<div>
 		<v-tab></v-tab>
-		<v-search searchName="查询管理角色">
+		<v-search searchName="贷款数据查询">
 			<template>
 				<el-form label-width="100px" label-position="right" :inline="true" :model="serachForm">
-					<el-form-item label="用户名：">
-						<el-input v-model="serachForm.userName" placeholder="请输入登陆名" 
+					<el-form-item label="问题标题：">
+						<el-input v-model="serachForm.ChannelName" placeholder="请输入用户ID" 
 						class="input-small"></el-input>
 					</el-form-item>
-					<el-form-item label="状态：">
-            <el-select v-model="serachForm.status" placeholder="请选择" class="input-small">
+
+          <el-form-item label="状态：">
+            <el-select v-model="serachForm.Status" placeholder="请选择" class="input-small">
               <el-option
               v-for="item in options"
               :key="item.value"
@@ -26,39 +27,37 @@
   </v-search>
 
   <!-- table组件 -->
-  <v-table title="角色列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
+  <v-table title="渠道列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
    <template slot="btn">
     <el-button type="primary" size="small" @click="addDialog">新增</el-button>
   </template>
   <el-table :data="tableData" border  style="width: 100%">
     <el-table-column align="center" type="index" label="序号" width="60"> </el-table-column>
-    <el-table-column align="center" prop="LoginName" label="登陆名" width="120"></el-table-column>
-    <el-table-column align="center" prop="LoginPwd" label="登陆密码" width="120"></el-table-column>
-    <el-table-column align="center" prop="RoleName" label="角色类型" width="100">
+    <el-table-column align="center" prop="Channel" label="渠道号" width="120"></el-table-column>
+    <el-table-column align="center" prop="Token" label="Token" width="340"></el-table-column>
+    <el-table-column align="center" prop="ChannelName" label="渠道名" width="100">
     </el-table-column>
-    <el-table-column align="center" prop="Telephone" label="手机号" min-width="200">
+    <el-table-column align="center" prop="Address" label="地址" min-width="200">
     </el-table-column>
-    <el-table-column align="center" prop="Email" label="邮箱" width="200"></el-table-column>
-
     <el-table-column align="center" prop="Status" label="状态" width="50">
-     <template slot-scope="props">{{props.row.Status==0?"启用":"无效"}}</template>
+     <template slot-scope="props">{{props.row.Status==1?"启用":"无效"}}</template>
    </el-table-column>
-   <el-table-column align="center" prop="CreateTime" label="创建时间" width="180">
+   <el-table-column align="center" prop="Creatime" label="创建时间" width="180">
      <template slot-scope="props">
-      {{new Date(props.row.CreateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
+      {{new Date(props.row.Creatime).ljyFormat("yyyy-MM-dd HH:mm")}}
     </template>
   </el-table-column>
 
   <el-table-column align="center" label="操作">
    <template slot-scope="props">
     <el-button type="text" size="small" @click="upDateDialog(props.row)">修改</el-button>
-    <el-button type="text" size="small" @click="removeItem(props.row)">{{props.row.Status==0?"移除":"有效"}}</el-button>
+    <el-button type="text" size="small" @click="removeItem(props.row)">{{props.row.Status==1?"移除":"有效"}}</el-button>
   </template>
 </el-table-column>
 </el-table>
 </v-table>
 
-<el-dialog :title="isAdd ? '新增角色':'修改角色'" :visible.sync="isDialogVisible" 
+<el-dialog :title="isAdd ? '新增渠道':'修改渠道'" :visible.sync="isDialogVisible" 
 :close-on-click-modal="false"
 @close="dialogCloseCall">
 <el-form label-width="100px" label-position="right" 
@@ -66,52 +65,37 @@
 :model="form"
 ref="form"
 :rules="rules">
-<el-form-item label="登录名：" prop="LoginName">
- <el-input v-model="form.LoginName" placeholder="请输入登录名" 
+<el-form-item label="渠道号：" prop="Channel">
+ <el-input v-model="form.Channel" placeholder="请输入渠道号" 
  class="input-small">
 </el-input>
 </el-form-item>
 
-<el-form-item label="登陆密码：" prop="LoginPwd"> 
- <el-input v-model="form.LoginPwd" placeholder="请输入登陆密码" 
- class="input-small">
-</el-input>
-</el-form-item>
-<el-form-item label="真实姓名：" prop="RealName"> 
- <el-input v-model="form.RealName" placeholder="请输入RealName" 
+<el-form-item label="Token：" prop="Token"> 
+ <el-input v-model="form.Token" placeholder="请输入Token" 
  class="input-small">
 </el-input>
 </el-form-item>
 <br/>
-<el-form-item label="Email：" prop="Email"> 
- <el-input v-model="form.Email" placeholder="请输入Email" 
+<el-form-item label="渠道名：" prop="ChannelName"> 
+ <el-input v-model="form.ChannelName" placeholder="请输入渠道名" 
  class="input-small">
 </el-input>
 </el-form-item>
-<el-form-item label="Telephone：" prop="Telephone"> 
- <el-input v-model="form.Telephone" placeholder="请输入Telephone" 
+<el-form-item label="地址：" prop="Address"> 
+ <el-input v-model="form.Address" placeholder="请输入地址" 
  class="input-small">
 </el-input>
-</el-form-item>
-<el-form-item label="角色名称：" prop="RoleName">
-  <el-select v-model="form.RoleName" placeholder="请选择" class="input-small">
-    <el-option
-    v-for="item in roles"
-    :key="item.value"
-    :label="item.label"
-    :value="item.value">
-  </el-option>
-</el-select>
 </el-form-item>
 <br>
 
 
 </el-form>
 <div slot="footer" class="dialog-footer dialog-footer-1">
-	<el-button @click="isDialogVisible = false" class="e-btn">取消</el-button>
-	<el-button type="primary" class="e-btn" @click="save">确定</el-button>
+  <el-button @click="isDialogVisible = false" class="e-btn">取消</el-button>
+  <el-button type="primary" class="e-btn" @click="save">确定</el-button>
 </div>
-</el-dialog>  
+</el-dialog>
 </div>
 </template>
 
@@ -135,7 +119,7 @@ export default {
 					else callback()
 				}
 			return {
-        options:[{value:0,label:"有效"},{value:1,label:"无效"}],
+        options:[{value:-1,label:"全部"},{value:1,label:"有效"},{value:0,label:"无效"}],
         roles:[{
           value: '管理员',
           label: '管理员'
@@ -153,36 +137,24 @@ export default {
              },
         form:                      // 课程的表单
         {
-          "Id": 1,
-          "LoginName": "",
-          "LoginPwd": "",
-          "RealName": "",
-          "Email": "",
-          "Telephone": "",
-          "RoleName": "",
-          "Status": "",
-          "CreatedTime": ""
+
         },
        // 规则
        rules:{
-       	LoginName: [
-       	{ required: true, message: '请输入登录名', trigger: 'blur' },
-       	],
+        Channel: [
+        { required: true, message: '请输入Channel', trigger: 'blur' },
+        ],
            // selectValidator
-           LoginPwd:[
-           { required: true, message: '请输入登陆密码', trigger: 'blur' }
+           Token:[
+           { required: true, message: '请输入Token', trigger: 'blur' }
            ],
-           RealName:[
-           { required: true, message: '请输入真实姓名', trigger: 'blur' }
+           Address:[
+           { required: true, message: '请输入Address', trigger: 'blur' }
            ],
            // RoleName:[
            // { required: true, message: '', trigger: 'blur' }
            // ],
-           RoleName:[
-           { validator:selectValidator ,message: '请选择角色类型', trigger: 'change' }],
-           Telephone:[
-           { validator:notVaild ,message: '请输入正确的手机号', trigger: 'change' }
-           ]
+           
          }
        }
      },
@@ -217,7 +189,7 @@ export default {
       		para.Status=1
       	}
 
-      	http.httpPost("/manager/admin/updateAdmin",para).then(data=>{
+      	http.httpPost("/manager/channel/updateChannel",para).then(data=>{
       		console.log(data)
       		if(data) helper.message("操作成功","success")
       			this.search()
@@ -234,9 +206,9 @@ export default {
       		this.$refs['form'].validate((valid) => {
       			if(valid){
       				if(this.isAdd) this.form.Id = 0 
-      					this.form.Status=0
+      					this.form.Status=1
               console.log(this.form)
-              http.httpPost("/manager/admin/addAdmin",this.form).then(data=>{
+              http.httpPost("/manager/channel/addChannel",this.form).then(data=>{
                console.log(data)
                if(data>0) helper.message("添加成功","success")
                 this.search()
@@ -248,7 +220,7 @@ export default {
       		this.$refs['form'].validate((valid) => {
       			if(valid){
 
-      				http.httpPost("/manager/admin/updateAdmin",this.form).then(data=>{
+      				http.httpPost("/manager/channel/updateChannel",this.form).then(data=>{
       					console.log(data)
       					if(data) helper.message("修改成功","success")
       						this.search()
@@ -260,15 +232,15 @@ export default {
 
       },
       search(){  // 查询函数
-      	let page = this.$refs["table"].getPagingInfo();
-      	let para=Object.assign(this.serachForm,page);
+
+      	let para=Object.assign(this.serachForm);
       	console.log(para);
-      	http.httpPost("/manager/admin/getAdminList",para).then(data=>{
+      	http.httpPost("/manager/channel/searchChannel",para).then(data=>{
       		let result = data.Data,
-      		totalCount = data.TotalCount   
-      		this.tableData = result
-      		this.totalCount = totalCount
-      	})
+          totalCount = data.TotalCount   
+          this.tableData = result
+          this.totalCount = totalCount
+        })
       },
       upLoadImg(){ // 获取图片
       	helper.upLoadImage((data)=>{
