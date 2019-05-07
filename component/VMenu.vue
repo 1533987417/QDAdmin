@@ -40,6 +40,10 @@
       <i class="el-icon-menu"></i>
       <span slot="title">会员查询</span>
     </el-menu-item>
+    <el-menu-item index="persionAuth">
+      <i class="el-icon-menu"></i>
+      <span slot="title">个人认证</span>
+    </el-menu-item>
   </el-menu>
 </div>
 </template>

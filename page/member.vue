@@ -84,6 +84,9 @@
  <el-table-column align="center" prop="IsCompanyAuthentication" label="公司认证" width="100">
    <template slot-scope="props">{{props.row.IsCompanyAuthentication==1?"已认证":"未认证"}}</template>
  </el-table-column>
+ <el-table-column align="center" prop="RegistType" label="注册类型" width="100">
+   <template slot-scope="props">{{props.row.IsCompanyAuthentication==0?"上门":"邀请注册"}}</template>
+ </el-table-column>
  <el-table-column align="center" prop="Status" label="状态" width="50">
    <template slot-scope="props">{{props.row.Status==1?"有效":"无效"}}</template>
  </el-table-column>
@@ -97,12 +100,7 @@
     {{new Date(props.row.UpdateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
   </template>
 </el-table-column>
-<el-table-column align="center" label="操作">
- <template slot-scope="props">
-  <el-button type="text" size="small" @click="upDateDialog(props.row)">修改</el-button>
-  <el-button type="text" size="small" @click="removeItem(props.row)">{{props.row.Status==0?"移除":"有效"}}</el-button>
-</template>
-</el-table-column>
+
 </el-table>
 </v-table>
 
@@ -251,12 +249,7 @@ export default {
       	this.isDialogVisible = true;
       	this.form=Object.assign({},initForm) ;
       },
-      upDateDialog(row){           // 修改新的课程
-      	this.isAdd = false
-      	this.isDialogVisible = true
-      	console.log("带过来的参数",row)
-      	this.form=Object.assign({},row) ;
-      },
+
       removeItem(e){
       	console.log(e);
       	let para=Object.assign({},e) ;

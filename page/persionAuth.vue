@@ -1,23 +1,28 @@
 <template>
 	<div>
 		<v-tab></v-tab>
-		<v-search searchName="查询管理角色">
+		<v-search searchName="查询个人认证">
 			<template>
 				<el-form label-width="100px" label-position="right" :inline="true" :model="serachForm">
-					<el-form-item label="用户名：">
-						<el-input v-model="serachForm.UserName" placeholder="请输入登陆名" 
+					<el-form-item label="姓名：">
+						<el-input v-model="serachForm.RealName" placeholder="请输入姓名" 
 						class="input-small"></el-input>
 					</el-form-item>
-					<el-form-item label="状态：">
-            <el-select v-model="serachForm.Status" placeholder="请选择" class="input-small">
+          <el-form-item label="地区：">
+            <el-input v-model="serachForm.Location" placeholder="请输入地区" 
+            class="input-small"></el-input>
+          </el-form-item>
+          <el-form-item label="审核状态：">
+            <el-select v-model="serachForm.ApproveStatus" placeholder="请选择" class="input-small">
               <el-option
-              v-for="item in options"
+              v-for="item in Authentications"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
+        
         <el-form-item label="">
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
@@ -26,92 +31,50 @@
   </v-search>
 
   <!-- table组件 -->
-  <v-table title="角色列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
-   <template slot="btn">
-    <el-button type="primary" size="small" @click="addDialog">新增</el-button>
-  </template>
-  <el-table :data="tableData" border  style="width: 100%">
-    <el-table-column align="center" type="index" label="序号" width="60"> </el-table-column>
-    <el-table-column align="center" prop="LoginName" label="登陆名" width="120"></el-table-column>
-    <el-table-column align="center" prop="LoginPwd" label="登陆密码" width="120"></el-table-column>
-    <el-table-column align="center" prop="RoleName" label="角色类型" width="100">
-    </el-table-column>
-    <el-table-column align="center" prop="Telephone" label="手机号" min-width="200">
-    </el-table-column>
-    <el-table-column align="center" prop="Email" label="邮箱" width="200"></el-table-column>
+  <v-table title="个人认证列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
 
-    <el-table-column align="center" prop="Status" label="状态" width="50">
-     <template slot-scope="props">{{props.row.Status==0?"启用":"无效"}}</template>
-   </el-table-column>
-   <el-table-column align="center" prop="CreateTime" label="创建时间" width="180">
+    <el-table :data="tableData" border  style="width: 100%">
+      <el-table-column align="center" type="index" label="序号" width="60"> </el-table-column>
+
+      <el-table-column align="center" prop="UserId" label="用户账号ID" width="120"></el-table-column>
+      <el-table-column align="center" prop="RealName" label="真实姓名" width="120"></el-table-column>
+      <el-table-column align="center" prop="Sex" label="性别" width="100">
+        <template slot-scope="props">{{props.row.Sex==0?"男":props.row.Sex==1?"女":"未知"}}</template>
+      </el-table-column>
+      <el-table-column align="center" prop="IdCardNo" label="身份证" min-width="150">
+      </el-table-column>
+      <el-table-column align="center" prop="IdCardImage1" label="身份证图片正面" width="150">
+        <!-- <template slot-scope="props"></template> -->
+      </el-table-column>
+      <el-table-column align="center" prop="IdCardImage2" label="身份证图片反面" width="150">
+        <!-- <template slot-scope="props"></template> -->
+      </el-table-column>
+      <el-table-column align="center" prop="Location" label="所在地区" width="80"></el-table-column>
+      <el-table-column align="center" prop="ApproveStatus" label="认证状态" width="80">
+       <template slot-scope="props">{{props.row.ApproveStatus==1?"审核通过":props.row.ApproveStatus==2?"审核失败":"未审核"}}</template>
+     </el-table-column>
+
+     <el-table-column align="center" prop="Status" label="状态" width="50">
+       <template slot-scope="props">{{props.row.Status==1?"有效":"无效"}}</template>
+     </el-table-column>
+     <el-table-column align="center" prop="CreateTime" label="创建时间" width="180">
+       <template slot-scope="props">
+        {{new Date(props.row.CreateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
+      </template>
+    </el-table-column>
+    <el-table-column align="center" prop="CreateTime" label="更新时间" width="180">
+      <template slot-scope="props">
+        {{new Date(props.row.UpdateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
+      </template>
+    </el-table-column>
+    <el-table-column align="center" label="操作">
      <template slot-scope="props">
-      {{new Date(props.row.CreateTime).ljyFormat("yyyy-MM-dd HH:mm")}}
+      <el-button type="text" size="small" @click="pass(props.row.Id)">通过</el-button>
+      <el-button type="text" size="small" @click="reback(props.row.Id)">驳回</el-button>
     </template>
   </el-table-column>
-
-  <el-table-column align="center" label="操作">
-   <template slot-scope="props">
-    <el-button type="text" size="small" @click="upDateDialog(props.row)">修改</el-button>
-    <el-button type="text" size="small" @click="removeItem(props.row)">{{props.row.Status==0?"移除":"有效"}}</el-button>
-  </template>
-</el-table-column>
 </el-table>
 </v-table>
-
-<el-dialog :title="isAdd ? '新增角色':'修改角色'" :visible.sync="isDialogVisible" 
-:close-on-click-modal="false"
-@close="dialogCloseCall">
-<el-form label-width="100px" label-position="right" 
-:inline="true"
-:model="form"
-ref="form"
-:rules="rules">
-<el-form-item label="登录名：" prop="LoginName">
- <el-input v-model="form.LoginName" placeholder="请输入登录名" 
- class="input-small">
-</el-input>
-</el-form-item>
-
-<el-form-item label="登陆密码：" prop="LoginPwd"> 
- <el-input v-model="form.LoginPwd" placeholder="请输入登陆密码" 
- class="input-small">
-</el-input>
-</el-form-item>
-<el-form-item label="真实姓名：" prop="RealName"> 
- <el-input v-model="form.RealName" placeholder="请输入RealName" 
- class="input-small">
-</el-input>
-</el-form-item>
-<br/>
-<el-form-item label="Email：" prop="Email"> 
- <el-input v-model="form.Email" placeholder="请输入Email" 
- class="input-small">
-</el-input>
-</el-form-item>
-<el-form-item label="Telephone：" prop="Telephone"> 
- <el-input v-model="form.Telephone" placeholder="请输入Telephone" 
- class="input-small">
-</el-input>
-</el-form-item>
-<el-form-item label="角色名称：" prop="RoleName">
-  <el-select v-model="form.RoleName" placeholder="请选择" class="input-small">
-    <el-option
-    v-for="item in roles"
-    :key="item.value"
-    :label="item.label"
-    :value="item.value">
-  </el-option>
-</el-select>
-</el-form-item>
-<br>
-
-
-</el-form>
-<div slot="footer" class="dialog-footer dialog-footer-1">
-	<el-button @click="isDialogVisible = false" class="e-btn">取消</el-button>
-	<el-button type="primary" class="e-btn" @click="save">确定</el-button>
-</div>
-</el-dialog>  
 </div>
 </template>
 
@@ -135,14 +98,9 @@ export default {
 					else callback()
 				}
 			return {
-        options:[{value:0,label:"有效"},{value:1,label:"无效"}],
-        roles:[{
-          value: '管理员',
-          label: '管理员'
-        },{
-          value: '一般用户',
-          label: '一般用户'
-        }],
+
+
+        Authentications:[{value:0,label:"未审核"},{value:1,label:"审核通过"},{value:2,label:"审核失败"}],
         tableData:[],
         totalCount:0,
             isAdd:true,                    // 是否新增
@@ -202,27 +160,32 @@ export default {
       	this.isDialogVisible = true;
       	this.form=Object.assign({},initForm) ;
       },
-      upDateDialog(row){           // 修改新的课程
-      	this.isAdd = false
-      	this.isDialogVisible = true
-      	console.log("带过来的参数",row)
-      	this.form=Object.assign({},row) ;
-      },
-      removeItem(e){
+
+      pass(e){
       	console.log(e);
-      	let para=Object.assign({},e) ;
-      	if(e.Status=="1"){
-      		para.Status=0;
-      	}else{
-      		para.Status=1
-      	}
+      	let para=Object.assign({});
+      	para.UserProfileId=e;
+        para.ApproveStatus=1;
 
-      	http.httpPost("/manager/admin/updateAdmin",para).then(data=>{
-      		console.log(data)
-      		if(data) helper.message("操作成功","success")
-      			this.search()
+        http.httpPost("/manager/users/updatePersonAuthentication",para).then(data=>{
+          console.log(data)
+          if(data) helper.message("操作成功","success")
+           this.search()
 
-      	})
+       })
+      },
+      reback(e){
+        console.log(e);
+        let para=Object.assign({});
+        para.UserProfileId=e;
+        para.ApproveStatus=2;
+
+        http.httpPost("/manager/users/updatePersonAuthentication",para).then(data=>{
+          console.log(data)
+          if(data) helper.message("操作成功","success")
+            this.search()
+
+        })
       },
       add(){
 
@@ -262,14 +225,13 @@ export default {
       search(){  // 查询函数
       	let page = this.$refs["table"].getPagingInfo();
       	let para=Object.assign(this.serachForm,page);
-      	console.log(para);para.PageSize=para.PageSiz
-        
-        http.httpPost("/manager/admin/getAdminList",para).then(data=>{
-          let result = data.Data,
-          totalCount = data.TotalCount   
-          this.tableData = result
-          this.totalCount = totalCount
-        })
+      	console.log(para);
+      	http.httpPost("/manager/users/getPersonAuthenticationList",para).then(data=>{
+      		let result = data.Data,
+      		totalCount = data.TotalCount   
+      		this.tableData = result
+      		this.totalCount = totalCount
+      	})
       },
       upLoadImg(){ // 获取图片
       	helper.upLoadImage((data)=>{

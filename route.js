@@ -45,6 +45,11 @@ let routes = [{
     name:"会员查询",
     component:require("./page/member.vue").default,
     children:[]
+},{
+    path:"/persionAuth",
+    name:"个人认证",
+    component:require("./page/persionAuth.vue").default,
+    children:[]
 }
 ]
 

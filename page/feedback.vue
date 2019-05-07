@@ -35,7 +35,7 @@
       <el-table-column align="center" prop="Mobile" label="手机号" width="120">
 
       </el-table-column>
-      <el-table-column align="center" prop="Status" label="状态" width="50">
+      <el-table-column align="center" prop="Status" label="状态" width="80">
        <template slot-scope="props">{{props.row.Status==1?"启用":props.row.Status==2?"已回复":"无效"}}</template>
      </el-table-column>
      <el-table-column align="center" prop="CreateTime" label="创建时间" width="180">
@@ -193,19 +193,20 @@ export default {
       	console.log(e);
       	let para=Object.assign({},e) ;
       	para.Status=0
+        para.FeedbackId=para.Id
 
-      	http.httpPost("/manager/feedback/updateFeedbckStatus",para).then(data=>{
-      		console.log(data)
-      		if(data) helper.message("操作成功","success")
-      			this.search()
+        http.httpPost("/manager/feedback/updateFeedbckStatus",para).then(data=>{
+          console.log(data)
+          if(data) helper.message("操作成功","success")
+           this.search()
 
-      	})
+       })
       },
       feedBackItem(e){
         console.log(e);
         let para=Object.assign({},e) ;
         para.Status=2
-
+        para.FeedbackId=para.Id
         http.httpPost("/manager/feedback/updateFeedbckStatus",para).then(data=>{
           console.log(data)
           if(data) helper.message("操作成功","success")
