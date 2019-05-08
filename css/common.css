@@ -30,6 +30,19 @@ p{
     font-size: 18px;
 }
 
+.show-user{
+    line-height: 66px;
+    margin-right: 40px;
+    height: 100%;
+    float: right
+}
+.show-user p{
+    color: #fff;
+    font-size: 14px;
+    margin-right: 20px;
+    display:inline-block;
+}
+
 .menu{
     position: fixed;
     top: 66px;
@@ -37,6 +50,16 @@ p{
     width: 160px;
     background-color: #545c64;
     height: calc(100% - 66px);
+    -webkit-transition: width 1s
+}
+.menu1{
+    position: fixed;
+    top: 66px;
+    left: 0px;
+    width: 64px;
+    background-color: #545c64;
+    height: calc(100% - 66px);
+    -webkit-transition: width 0.5 s
 }
 
 /* 主区域 */
@@ -45,9 +68,18 @@ p{
     margin:66px 0px 0px 160px;
     box-sizing: border-box;
     min-height: calc(100%-66px);
-    padding: 12px
+    padding: 12px;
+    -webkit-transition: width 1s
 }
 
+.main2{
+    width: auto;
+    margin:66px 0px 0px 60px;
+    box-sizing: border-box;
+    min-height: calc(100%-66px);
+    padding: 12px;
+    -webkit-transition: width 1s
+}
 .form-set{
     width: 100%;
     border: 1px solid #000
@@ -68,12 +100,12 @@ p{
 }
 
 .el-table__header tr,
-  .el-table__header th {
+.el-table__header th {
     padding: 0;
     height: 40px;
 }
 .el-table__body tr,
-  .el-table__body td {
+.el-table__body td {
     padding: 0;
     height: 40px;
 }

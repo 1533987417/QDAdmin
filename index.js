@@ -29,10 +29,18 @@ let App = new Vue({
   router,
   data(){
     return{
-      mes:"welcome to index11.vue"
+      mes:"welcome to index11.vue",
+      menu:"menu",
+      main:"main"
     }
   },
   created(){
     console.log("我在这里...")
+  },
+  methods:{
+
+    logOff(e){
+      console.log("退出")
+    }
   }
 })  

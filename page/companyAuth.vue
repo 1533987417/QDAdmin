@@ -1,17 +1,14 @@
 <template>
 	<div>
 		<v-tab></v-tab>
-		<v-search searchName="查询个人认证">
+		<v-search searchName="查询公司认证">
 			<template>
 				<el-form label-width="100px" label-position="right" :inline="true" :model="serachForm">
-					<el-form-item label="姓名：">
-						<el-input v-model="serachForm.RealName" placeholder="请输入姓名" 
+					<el-form-item label="公司名称：">
+						<el-input v-model="serachForm.CompanyName" placeholder="请输入公司名称" 
 						class="input-small"></el-input>
 					</el-form-item>
-          <el-form-item label="地区：">
-            <el-input v-model="serachForm.Location" placeholder="请输入地区" 
-            class="input-small"></el-input>
-          </el-form-item>
+
           <el-form-item label="审核状态：">
             <el-select v-model="serachForm.ApproveStatus" placeholder="请选择" class="input-small">
               <el-option
@@ -31,25 +28,22 @@
   </v-search>
 
   <!-- table组件 -->
-  <v-table title="个人认证列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
+  <v-table title="公司认证列表" :totalRecords="totalCount" ref="table" @pageChange="pageChange">
 
     <el-table :data="tableData" border  style="width: 100%">
       <el-table-column align="center" type="index" label="序号" width="60"> </el-table-column>
 
       <el-table-column align="center" prop="UserId" label="用户账号ID" width="120"></el-table-column>
-      <el-table-column align="center" prop="RealName" label="真实姓名" width="120"></el-table-column>
-      <el-table-column align="center" prop="Sex" label="性别" width="100">
-        <template slot-scope="props">{{props.row.Sex==0?"男":props.row.Sex==1?"女":"未知"}}</template>
+      <el-table-column align="center" prop="CompanyName" label="公司名称" width="120"></el-table-column>
+      <el-table-column align="center" prop="BelongBranch" label="所属分公司" width="100">
       </el-table-column>
-      <el-table-column align="center" prop="IdCardNo" label="身份证" min-width="150">
+      <el-table-column align="center" prop="CreditCode" label="社会统一信用代码" min-width="150">
       </el-table-column>
-      <el-table-column align="center" prop="IdCardImage1" label="身份证图片正面" width="150">
-        <template slot-scope="props"><a target="_blank" :href="props.row.IdCardImage1">{{props.row.IdCardImage1}}</a></template>
+      <el-table-column align="center" prop="CompanyAddress" label="公司地址" width="150">
       </el-table-column>
-      <el-table-column align="center" prop="IdCardImage2" label="身份证图片反面" width="150">
-        <template slot-scope="props"><a target="_blank" :href="props.row.IdCardImage2">{{props.row.IdCardImage2}}</a></template>
+      <el-table-column align="center" prop="CompanyImage1" label="营业执照图片" width="150">
+        <template slot-scope="props"><a target="_blank" :href="props.row.CompanyImage1">{{props.row.CompanyImage1}}</a></template>
       </el-table-column>
-      <el-table-column align="center" prop="Location" label="所在地区" width="80"></el-table-column>
       <el-table-column align="center" prop="ApproveStatus" label="认证状态" width="80">
        <template slot-scope="props">{{props.row.ApproveStatus==1?"审核通过":props.row.ApproveStatus==2?"审核失败":"未审核"}}</template>
      </el-table-column>
@@ -164,10 +158,10 @@ export default {
       pass(e){
       	console.log(e);
       	let para=Object.assign({});
-      	para.UserProfileId=e;
+      	para.ComapnyAuthId=e;
         para.ApproveStatus=1;
 
-        http.httpPost("/manager/users/updatePersonAuthentication",para).then(data=>{
+        http.httpPost("/manager/users/updateComapnyAuthentication",para).then(data=>{
           console.log(data)
           if(data) helper.message("操作成功","success")
            this.search()
@@ -177,10 +171,10 @@ export default {
       reback(e){
         console.log(e);
         let para=Object.assign({});
-        para.UserProfileId=e;
+        para.ComapnyAuthId=e;
         para.ApproveStatus=2;
 
-        http.httpPost("/manager/users/updatePersonAuthentication",para).then(data=>{
+        http.httpPost("/manager/users/updateComapnyAuthentication",para).then(data=>{
           console.log(data)
           if(data) helper.message("操作成功","success")
             this.search()
@@ -226,7 +220,7 @@ export default {
       	let page = this.$refs["table"].getPagingInfo();
       	let para=Object.assign(this.serachForm,page);
       	console.log(para);
-      	http.httpPost("/manager/users/getPersonAuthenticationList",para).then(data=>{
+      	http.httpPost("/manager/users/getCompanyAuthenticationList",para).then(data=>{
       		let result = data.Data,
       		totalCount = data.TotalCount   
       		this.tableData = result

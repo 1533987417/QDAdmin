@@ -11,13 +11,17 @@
         <div class="banner-contain">
             <div class="show-title">
                 <i class="el-icon-setting"></i>
-                箴创管理系统
+                抢单管理系统
+            </div>
+            <div class="show-user">
+                <p>你好，苏州彭于晏</p>
+                <el-button @click="logOff" type="text">退出登录</el-button>
             </div>
         </div>
-        <div class="menu">
+        <div :class="menu">
             <v-menu></v-menu>
         </div>
-        <div class="main">
+        <div :class="main">
             <router-view></router-view>
         </div>
     </div>

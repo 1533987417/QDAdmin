@@ -50,6 +50,21 @@ let routes = [{
     name:"个人认证",
     component:require("./page/persionAuth.vue").default,
     children:[]
+},{
+    path:"/chargeRecord",
+    name:"消费记录",
+    component:require("./page/chargeRecord.vue").default,
+    children:[]
+},{
+    path:"/companyAuth",
+    name:"公司认证",
+    component:require("./page/companyAuth.vue").default,
+    children:[]
+},{
+    path:"/rebackOrder",
+    name:"退单管理",
+    component:require("./page/rebackOrder.vue").default,
+    children:[]
 }
 ]
 
